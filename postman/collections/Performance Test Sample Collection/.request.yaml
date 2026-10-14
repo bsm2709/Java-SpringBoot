@@ -1,0 +1,24 @@
+$kind: http-request
+name: ""
+url: localhost:8080/api/student/
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \        \"address\": \"Near Acharya institute of technology\",\r
+
+    \        \"age\": 24,\r
+
+    \        \"courseOpted\": \"Computer Science\",\r
+
+    \        \"email\": \"basanagoudameti2003@gmail.com\",\r
+
+    \        \"phno\": 9113282750,\r
+
+    \        \"studentName\": \"Santosh\",\r
+
+    \        \"isDeleted\" : false\r
+
+    }"
+order: 1000
