@@ -56,7 +56,7 @@ public class ProductService {
         updateProduct.setPrice(product.getPrice());
         updateProduct.setDeleted(false);
 
-//        productInventory.save(updateProduct);
+        productInventory.save(updateProduct);
         return updateProduct;
     }
 
