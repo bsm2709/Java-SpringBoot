@@ -23,7 +23,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateProductResponseDto> createProduct( @RequestBody CreateProductRequestDto cprd){
+    public ResponseEntity<CreateProductResponseDto> createProduct(@Valid @RequestBody CreateProductRequestDto cprd){
         CreateProductResponseDto createdProduct = productService.createPro(cprd);
 
         if(createdProduct == null){
