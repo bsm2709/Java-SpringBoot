@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface ProductInventory extends JpaRepository<Product,Long> {
 
@@ -15,7 +16,7 @@ public interface ProductInventory extends JpaRepository<Product,Long> {
 
     public List<Product> findByPriceLessThanAndDeletedFalse(Double price);
 
-    public Optional<Product> findByIdAndDeletedFalse(Long id);
+    public Product findByIdAndDeletedFalse(Long id);
 
     public boolean existsByIdAndDeletedFalse(Long id);
 

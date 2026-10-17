@@ -1,10 +1,13 @@
 package com.example.productInventoryCRUD.Services;
 
+import com.example.productInventoryCRUD.Dtos.CreateProductDto.CreateProductRequestDto;
+import com.example.productInventoryCRUD.Dtos.CreateProductDto.CreateProductResponseDto;
 import com.example.productInventoryCRUD.Entity.Product;
 import com.example.productInventoryCRUD.Repositories.ProductInventory;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +21,15 @@ public class ProductService {
     }
 
     //Create Products
-    public Product createPro(Product product){
-        product.setDeleted(false);
-        Product createdProduct = productInventory.save(product);
-        return createdProduct;
+    public CreateProductResponseDto createPro(CreateProductRequestDto product){
+        //Converted RequestDto to Product
+        Product createdProduct = createRequestDtoToProduct(product);
+        //Saved Product to Database
+        Product createdProduct1 = productInventory.save(createdProduct);
+        //Now convert the Product back to ResponseDto
+        CreateProductResponseDto cpred = productToCreateResponseDto(createdProduct1);
+
+        return cpred;
     }
 
     //Get all products
@@ -38,13 +46,18 @@ public class ProductService {
 
 
     //Get perticular product
-    public Optional<Product> getProduct(Long id){
-        Optional<Product> product = productInventory.findByIdAndDeletedFalse(id);
-        return product;
+    public CreateProductResponseDto getProduct(Long id){
+        Product product = productInventory.findByIdAndDeletedFalse(id);
+
+        //Convert to ResponseDto
+        CreateProductResponseDto cpred = productToCreateResponseDto(product);
+        return cpred;
     }
 
     //Update Product
-    public Product updateProduct(Long id,Product product){
+    public CreateProductResponseDto updateProduct(Long id,CreateProductRequestDto cprd){
+        //Convert to product
+        Product product = createRequestDtoToProduct(cprd);
         boolean isPresent = productInventory.existsByIdAndDeletedFalse(id);
         if(!isPresent){
             return null;
@@ -55,9 +68,13 @@ public class ProductService {
         updateProduct.setQuantity(product.getQuantity());
         updateProduct.setPrice(product.getPrice());
         updateProduct.setDeleted(false);
+        updateProduct.setUpdatedAt(String.valueOf(LocalDateTime.now()));
 
         productInventory.save(updateProduct);
-        return updateProduct;
+
+        //Convert Product to response dto
+        CreateProductResponseDto cpred = productToCreateResponseDto(updateProduct);
+        return cpred;
     }
 
 
@@ -75,4 +92,40 @@ public class ProductService {
     }
 
 
+
+    //Methods for Mapping
+
+    public Product createRequestDtoToProduct(CreateProductRequestDto cprd){
+        Product product = new Product();
+
+        //Assignment
+        product.setProductName(cprd.getProductName());
+        product.setPrice(cprd.getPrice());
+        product.setQuantity(cprd.getQuantity());
+
+        //Declaring Deleted here only
+        product.setDeleted(false);
+
+        //Giving timeline
+        product.setCreatedAt(String.valueOf(LocalDateTime.now()));
+        product.setUpdatedAt(String.valueOf(LocalDateTime.now()));
+
+        //Return Product object
+        return product;
+    }
+
+    public CreateProductResponseDto productToCreateResponseDto(Product product){
+        CreateProductResponseDto cpred = new CreateProductResponseDto();
+
+        //Assignment
+        cpred.setProductName(product.getProductName());
+        cpred.setId(product.getId());
+        cpred.setPrice(product.getPrice());
+        cpred.setQuantity(product.getQuantity());
+        cpred.setCreatedAt(LocalDateTime.parse(product.getCreatedAt()));
+        cpred.setUpdatedAt(LocalDateTime.parse(product.getUpdatedAt()));
+
+        return cpred;
+
+    }
 }

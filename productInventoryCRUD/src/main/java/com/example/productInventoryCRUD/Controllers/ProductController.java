@@ -1,8 +1,12 @@
 package com.example.productInventoryCRUD.Controllers;
 
+import com.example.productInventoryCRUD.Dtos.CreateProductDto.CreateProductRequestDto;
+import com.example.productInventoryCRUD.Dtos.CreateProductDto.CreateProductResponseDto;
 import com.example.productInventoryCRUD.Entity.Product;
 import com.example.productInventoryCRUD.Services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +23,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        Product createdProduct = productService.createPro(product);
+    public ResponseEntity<CreateProductResponseDto> createProduct( @RequestBody CreateProductRequestDto cprd){
+        CreateProductResponseDto createdProduct = productService.createPro(cprd);
 
         if(createdProduct == null){
             return ResponseEntity.notFound().build();
@@ -52,18 +56,18 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Product>> singleActiveProduct(@PathVariable Long id){
-        Optional<Product> product = productService.getProduct(id);
-        if(product.isEmpty()){
+    public ResponseEntity<CreateProductResponseDto> singleActiveProduct(@PathVariable Long id){
+        CreateProductResponseDto product = productService.getProduct(id);
+        if(product == null){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.status(200).body(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateActiveProduct(@PathVariable Long id,
-                                    @RequestBody Product product){
-        Product updatedProduct = productService.updateProduct(id,product);
+    public ResponseEntity<CreateProductResponseDto> updateActiveProduct(@PathVariable Long id,
+                                                                        @RequestBody CreateProductRequestDto cprd){
+        CreateProductResponseDto updatedProduct = productService.updateProduct(id,cprd);
         if(updatedProduct == null){
             return ResponseEntity.notFound().build();
         }
