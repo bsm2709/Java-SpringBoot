@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Student {
     @Id
@@ -20,6 +22,9 @@ public class Student {
     private Long phno;
     private String courseOpted;
     private String address;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
+
 
 
     public Long getId() {
@@ -84,5 +89,21 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 }

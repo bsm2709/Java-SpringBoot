@@ -1,9 +1,12 @@
 package com.example.CrudDB.Service;
 
+import com.example.CrudDB.Dto.StudentRequestDto;
+import com.example.CrudDB.Dto.StudentResponseDto;
 import com.example.CrudDB.Entity.Student;
 import com.example.CrudDB.Repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,27 +19,34 @@ public class StudentService {
         System.out.println("Service class constructor");
     }
 
-    public Student addStudent(Student student){
-        student.setDeleted(false);
-       return studentRepository.save(student);
+    public StudentResponseDto addStudent(StudentRequestDto srd){
+        Student student = mapToStudent(srd);
+        studentRepository.save(student);
+        StudentResponseDto studentResponse = mapToStudentResponseDto(student);
+        return studentResponse;
+
     }
 
-    public Student updateStudent(Long id, Student student){
+    public StudentResponseDto updateStudent(Long id, StudentRequestDto srd){
         boolean isPresent = studentRepository.existsById(id);
         if(!isPresent){
             return null;
         }
         Student newStudent = studentRepository.findByIdAndDeletedIsFalse(id);
-        newStudent.setStudentName(student.getStudentName());
-        newStudent.setPhno(student.getPhno());
-        newStudent.setAge(student.getAge());
-        newStudent.setAddress(student.getAddress());
-        newStudent.setCourseOpted(student.getCourseOpted());
-        newStudent.setEmail(student.getEmail());
+        newStudent.setStudentName(srd.getStudentName());
+        newStudent.setPhno(srd.getPhno());
+        newStudent.setAge(srd.getAge());
+        newStudent.setAddress(srd.getAddress());
+        newStudent.setCourseOpted(srd.getCourseOpted());
+        newStudent.setEmail(srd.getEmail());
+        newStudent.setUpdatedTime(LocalDateTime.now());
 
         studentRepository.save(newStudent);
-        student.setDeleted(true);
-        return newStudent;
+
+        //map to response dto
+        StudentResponseDto sred = mapToStudentResponseDto(newStudent);
+
+        return sred;
     }
 
     public List<Student> getAllStudents(){
@@ -44,9 +54,11 @@ public class StudentService {
         return studentRepository.findByDeletedFalse() ;
     }
 
-    public Student getStudent(Long id){
+    public StudentResponseDto getStudent(Long id){
 
-        return studentRepository.findByIdAndDeletedIsFalse(id);
+        Student student = studentRepository.findByIdAndDeletedIsFalse(id);
+         StudentResponseDto sred = mapToStudentResponseDto(student);
+        return sred;
     }
 
     public String deleteStudent(Long id){
@@ -54,7 +66,8 @@ public class StudentService {
        return ("The id "+ id + " has been Deleted");
     }
 
-    public Student deleteSoftly(Long id){
+
+    public StudentResponseDto deleteSoftly(Long id){
         Boolean isPresent = studentRepository.existsById(id);
         if(!isPresent){
             return null;
@@ -63,6 +76,48 @@ public class StudentService {
         student.setDeleted(true);
         //Update to db
         studentRepository.save(student);
-        return student;
+        //map ot responseDto
+        StudentResponseDto softlyDeletedStudent = mapToStudentResponseDto(student);
+        return softlyDeletedStudent;
+    }
+
+
+    //Convertion
+    public Student mapToStudent(StudentRequestDto srd){
+        Student student = new Student();
+
+        student.setStudentName(srd.getStudentName());
+        student.setAge(srd.getAge());
+        student.setPhno(srd.getPhno());
+        student.setCourseOpted(srd.getCourseOpted());
+        student.setEmail(srd.getEmail());
+        student.setAddress(srd.getAddress());
+        student.setDeleted(false);
+
+        //Created time
+        student.setCreatedTime(LocalDateTime.now());
+        student.setUpdatedTime(LocalDateTime.now());
+
+        return  student;
+
+    }
+
+
+
+    public StudentResponseDto mapToStudentResponseDto(Student student){
+        StudentResponseDto studentResponseDto = new StudentResponseDto();
+
+        studentResponseDto.setStudentName(student.getStudentName());
+        studentResponseDto.setAge(student.getAge());
+        studentResponseDto.setPhno(student.getPhno());
+        studentResponseDto.setCourseOpted(student.getCourseOpted());
+        studentResponseDto.setEmail(student.getEmail());
+        studentResponseDto.setAddress(student.getAddress());
+        studentResponseDto.setId(student.getId());
+
+        studentResponseDto.setCreatedTime(student.getCreatedTime());
+        studentResponseDto.setUpdatedTime(student.getUpdatedTime());
+
+        return studentResponseDto;
     }
 }

@@ -1,7 +1,10 @@
 package com.example.CrudDB.Controller;
 
+import com.example.CrudDB.Dto.StudentRequestDto;
+import com.example.CrudDB.Dto.StudentResponseDto;
 import com.example.CrudDB.Entity.Student;
 import com.example.CrudDB.Service.StudentService;
+import jakarta.validation.Valid;
 import org.hibernate.annotations.SoftDelete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +25,7 @@ public class StudentController {
 
     //Adding Students
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student){
+    public ResponseEntity<StudentResponseDto> createStudent(@Valid @RequestBody StudentRequestDto student){
         return ResponseEntity.status(201).body(studentService.addStudent(student));
     }
 
@@ -38,14 +41,14 @@ public class StudentController {
 
     //Getting student by id
     @GetMapping("/{id}")
-    public ResponseEntity<Student> readStudent(@PathVariable Long id){
-        Student student = studentService.getStudent(id);
+    public ResponseEntity<StudentResponseDto> readStudent(@PathVariable Long id){
+        StudentResponseDto student = studentService.getStudent(id);
         return ResponseEntity.status(201).body(student);
     }
 
 //    Update student
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@RequestBody Student student,
+    public ResponseEntity<StudentResponseDto> updateStudent(@RequestBody StudentRequestDto student,
                                                  @PathVariable Long id){
         return ResponseEntity.status(201).body(studentService.updateStudent(id, student));
     }
@@ -57,10 +60,11 @@ public class StudentController {
         return ResponseEntity.status(201).body(studentService.deleteStudent(id));
     }
 
+    //Soft Delete
     @PatchMapping("/softDelete/{id}")
-    public ResponseEntity<Student> deleteStudentSoft(@PathVariable Long id){
+    public ResponseEntity<StudentResponseDto> deleteStudentSoft(@PathVariable Long id){
 
-        Student isDeleted = studentService.deleteSoftly(id);
+        StudentResponseDto isDeleted = studentService.deleteSoftly(id);
         if(isDeleted == null){
             return ResponseEntity.notFound().build();
         }
