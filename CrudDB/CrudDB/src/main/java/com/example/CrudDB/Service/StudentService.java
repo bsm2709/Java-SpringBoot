@@ -3,6 +3,7 @@ package com.example.CrudDB.Service;
 import com.example.CrudDB.Dto.StudentRequestDto;
 import com.example.CrudDB.Dto.StudentResponseDto;
 import com.example.CrudDB.Entity.Student;
+import com.example.CrudDB.ExceptionHandler.ItemNotFound;
 import com.example.CrudDB.Repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +29,8 @@ public class StudentService {
     }
 
     public StudentResponseDto updateStudent(Long id, StudentRequestDto srd){
-        boolean isPresent = studentRepository.existsById(id);
-        if(!isPresent){
-            return null;
-        }
-        Student newStudent = studentRepository.findByIdAndDeletedIsFalse(id);
+
+        Student newStudent = studentRepository.findByIdAndDeletedIsFalse(id).orElseThrow(() -> new RuntimeException("Cant find the object with id"+ id));
         newStudent.setStudentName(srd.getStudentName());
         newStudent.setPhno(srd.getPhno());
         newStudent.setAge(srd.getAge());
@@ -43,10 +41,9 @@ public class StudentService {
 
         studentRepository.save(newStudent);
 
-        //map to response dto
-        StudentResponseDto sred = mapToStudentResponseDto(newStudent);
+        //map to response dto and return
 
-        return sred;
+        return mapToStudentResponseDto(newStudent);
     }
 
     public List<Student> getAllStudents(){
@@ -56,9 +53,8 @@ public class StudentService {
 
     public StudentResponseDto getStudent(Long id){
 
-        Student student = studentRepository.findByIdAndDeletedIsFalse(id);
-         StudentResponseDto sred = mapToStudentResponseDto(student);
-        return sred;
+        Student student = studentRepository.findByIdAndDeletedIsFalse(id).orElseThrow(() ->new ItemNotFound("Item of ID "+ id+ " not found "));
+        return mapToStudentResponseDto(student);
     }
 
     public String deleteStudent(Long id){
@@ -68,11 +64,8 @@ public class StudentService {
 
 
     public StudentResponseDto deleteSoftly(Long id){
-        Boolean isPresent = studentRepository.existsById(id);
-        if(!isPresent){
-            return null;
-        }
-        Student student = studentRepository.findByIdAndDeletedIsFalse(id);
+
+        Student student = studentRepository.findByIdAndDeletedIsFalse(id).orElseThrow(() -> new ItemNotFound("Cant find item to delete"));
         student.setDeleted(true);
         //Update to db
         studentRepository.save(student);
@@ -117,7 +110,8 @@ public class StudentService {
 
         studentResponseDto.setCreatedTime(student.getCreatedTime());
         studentResponseDto.setUpdatedTime(student.getUpdatedTime());
-
         return studentResponseDto;
     }
+
+
 }
