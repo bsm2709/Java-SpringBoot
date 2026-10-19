@@ -13,6 +13,7 @@ public class StudentResponseDto {
     private String address;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
+    private String createdBy;
 
 
     public LocalDateTime getUpdatedTime() {
@@ -85,5 +86,13 @@ public class StudentResponseDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

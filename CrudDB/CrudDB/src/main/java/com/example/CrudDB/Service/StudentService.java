@@ -5,6 +5,7 @@ import com.example.CrudDB.Dto.StudentResponseDto;
 import com.example.CrudDB.Entity.Student;
 import com.example.CrudDB.ExceptionHandler.ItemNotFound;
 import com.example.CrudDB.Repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,10 @@ import java.util.Optional;
 
 @Service
 public class StudentService {
+
+    //To check which Profile
+    @Value("${message.out}")
+    String message;
 
     StudentRepository studentRepository;
     public StudentService(StudentRepository studentRepository){
@@ -107,6 +112,10 @@ public class StudentService {
         studentResponseDto.setEmail(student.getEmail());
         studentResponseDto.setAddress(student.getAddress());
         studentResponseDto.setId(student.getId());
+
+
+        //Profile checking into response
+        studentResponseDto.setCreatedBy(message);
 
         studentResponseDto.setCreatedTime(student.getCreatedTime());
         studentResponseDto.setUpdatedTime(student.getUpdatedTime());
