@@ -1,6 +1,7 @@
 package com.example.ProfilesAndFiltersBasics.Services;
 
 
+import com.example.ProfilesAndFiltersBasics.Entity.UserDetails;
 import com.example.ProfilesAndFiltersBasics.Notification.Notification;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,5 +21,10 @@ public class NotificationService {
 
     public String callNotification(){
         return   message + " "+notification.notificationby() ;
+    }
+
+    public UserDetails createUser(UserDetails user) {
+
+        return user;
     }
 }
