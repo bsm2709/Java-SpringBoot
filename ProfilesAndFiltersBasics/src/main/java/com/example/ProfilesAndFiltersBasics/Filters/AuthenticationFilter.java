@@ -28,9 +28,9 @@ public class AuthenticationFilter implements Filter {
 
 
         //To simply check authentication using any header values (just for example)
-        String key =httpRequest.getHeader("key");
+        String key = httpRequest.getHeader("key");
 
-        if(!Objects.equals(key, "123456")){
+        if(key == null || !key.equals("12345")){
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
