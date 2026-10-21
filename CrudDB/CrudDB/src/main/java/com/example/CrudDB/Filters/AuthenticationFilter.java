@@ -13,6 +13,14 @@ import java.io.IOException;
 @Component
 @Order(1)
 public class AuthenticationFilter extends OncePerRequestFilter {
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String URI = request.getRequestURI();
+
+        return !URI.startsWith("/api/student");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
