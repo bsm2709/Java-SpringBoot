@@ -3,6 +3,7 @@ package com.example.productInventoryCRUD.Services;
 import com.example.productInventoryCRUD.Dtos.CreateProductDto.CreateProductRequestDto;
 import com.example.productInventoryCRUD.Dtos.CreateProductDto.CreateProductResponseDto;
 import com.example.productInventoryCRUD.Entity.Product;
+import com.example.productInventoryCRUD.ExceptionHandling.ItemNotFound;
 import com.example.productInventoryCRUD.Repositories.ProductInventory;
 import org.springframework.stereotype.Service;
 
@@ -27,42 +28,36 @@ public class ProductService {
         //Saved Product to Database
         Product createdProduct1 = productInventory.save(createdProduct);
         //Now convert the Product back to ResponseDto
-        CreateProductResponseDto cpred = productToCreateResponseDto(createdProduct1);
 
-        return cpred;
+        return productToCreateResponseDto(createdProduct1);
     }
 
     //Get all products
     public List<Product> getAllProducts(){
-        List<Product> products = productInventory.findByDeletedFalse();
-        return products;
+        return productInventory.findByDeletedFalse();
     }
 
     //Get products less than given
     public List<Product> productLessThan(Double price){
-        List<Product> products = productInventory.findByPriceLessThanAndDeletedFalse(price);
-        return products;
+        return productInventory.findByPriceLessThanAndDeletedFalse(price);
     }
 
 
     //Get perticular product
     public CreateProductResponseDto getProduct(Long id){
-        Product product = productInventory.findByIdAndDeletedFalse(id);
+        Product product = productInventory.findByIdAndDeletedFalse(id).orElseThrow(() -> new ItemNotFound("id of "+ id + " not found " ));
 
         //Convert to ResponseDto
-        CreateProductResponseDto cpred = productToCreateResponseDto(product);
-        return cpred;
+        return productToCreateResponseDto(product);
     }
 
     //Update Product
     public CreateProductResponseDto updateProduct(Long id,CreateProductRequestDto cprd){
         //Convert to product
         Product product = createRequestDtoToProduct(cprd);
-        boolean isPresent = productInventory.existsByIdAndDeletedFalse(id);
-        if(!isPresent){
-            return null;
-        }
-        Product updateProduct = productInventory.getReferenceById(id);
+
+        //Update
+        Product updateProduct = productInventory.findByIdAndDeletedFalse(id).orElseThrow(() -> new ItemNotFound("id of "+ id + " not found t perform update" ));
 
         updateProduct.setProductName(product.getProductName());
         updateProduct.setQuantity(product.getQuantity());
@@ -73,22 +68,20 @@ public class ProductService {
         productInventory.save(updateProduct);
 
         //Convert Product to response dto
-        CreateProductResponseDto cpred = productToCreateResponseDto(updateProduct);
-        return cpred;
+        return productToCreateResponseDto(updateProduct);
     }
 
 
     //Soft-Delete
-    public boolean softlyDelete(Long id){
+    public void softlyDelete(Long id){
         boolean isPresent = productInventory.existsByIdAndDeletedFalse(id);
-        if(!isPresent){
-            return false;
-        }
-        Product deletedProduct = productInventory.getReferenceById(id);
+
+        Product deletedProduct = productInventory.findByIdAndDeletedFalse(id).orElseThrow(() -> new ItemNotFound("id of "+ id + " not found to delete" ));
+
+        //Edit its setDeleted to true
         deletedProduct.setDeleted(true);
 
         productInventory.save(deletedProduct);
-        return true;
     }
 
 

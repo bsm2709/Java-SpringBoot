@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class CreateProductRequestDto {
 
+
     @NotBlank(message = "Name cant be black/empty/null")
     private String productName;
 

@@ -58,9 +58,6 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<CreateProductResponseDto> singleActiveProduct(@PathVariable Long id){
         CreateProductResponseDto product = productService.getProduct(id);
-        if(product == null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.status(200).body(product);
     }
 
@@ -68,18 +65,12 @@ public class ProductController {
     public ResponseEntity<CreateProductResponseDto> updateActiveProduct(@PathVariable Long id,
                                                                         @RequestBody CreateProductRequestDto cprd){
         CreateProductResponseDto updatedProduct = productService.updateProduct(id,cprd);
-        if(updatedProduct == null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.status(201).body(updatedProduct);
     }
 
     @PatchMapping("/softDelete/{id}")
     public ResponseEntity<String> softDelete(@PathVariable Long id){
-        boolean updatedProduct = productService.softlyDelete(id);
-        if(!updatedProduct){
-            return ResponseEntity.notFound().build();
-        }
+        productService.softlyDelete(id);
         return ResponseEntity.status(201).body("Deleted Successfully");
     }
 }

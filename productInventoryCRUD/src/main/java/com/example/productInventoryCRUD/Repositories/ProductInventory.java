@@ -16,7 +16,7 @@ public interface ProductInventory extends JpaRepository<Product,Long> {
 
     public List<Product> findByPriceLessThanAndDeletedFalse(Double price);
 
-    public Product findByIdAndDeletedFalse(Long id);
+    public Optional<Product> findByIdAndDeletedFalse(Long id);
 
     public boolean existsByIdAndDeletedFalse(Long id);
 
