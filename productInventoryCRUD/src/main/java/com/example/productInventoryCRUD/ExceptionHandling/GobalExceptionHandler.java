@@ -1,10 +1,12 @@
 package com.example.productInventoryCRUD.ExceptionHandling;
 
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.productInventoryCRUD.Dtos.CreateProductDto.ExceptionDto;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GobalExceptionHandler {
@@ -12,26 +14,24 @@ public class GobalExceptionHandler {
     //if no one error matches it will execute this one
     //Safety net
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> gobalException (Exception ex){
+    public ResponseEntity<ExceptionDto> gobalException (Exception ex){
+        ExceptionDto exceptionResponseDto =new ExceptionDto(LocalDateTime.now(), HttpStatusCode.valueOf(500).value(), ex.getMessage());
 
-        return ResponseEntity.internalServerError().body("Something Went Wrong");
+        return ResponseEntity.internalServerError().body(exceptionResponseDto);
     }
 
     //Handles all Runtime Errors
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> runException (RuntimeException ex){
+    public ResponseEntity<ExceptionDto> runException (RuntimeException ex){
+        ExceptionDto exceptionResponseDto =new ExceptionDto(LocalDateTime.now(), HttpStatusCode.valueOf(500).value(), ex.getMessage());
 
-        return ResponseEntity.internalServerError().body("Runtime Exception");
+        return ResponseEntity.internalServerError().body(exceptionResponseDto);
     }
 
     //Handles item not found exception
     @ExceptionHandler(ItemNotFound.class)
-    public ResponseEntity<String> itemNotFound (ItemNotFound ex){
-        return ResponseEntity.status(404).body(ex.getMessage());
+    public ResponseEntity<ExceptionDto> itemNotFound (ItemNotFound ex){
+        ExceptionDto exceptionResponseDto =new ExceptionDto(LocalDateTime.now(), HttpStatusCode.valueOf(404).value(), ex.getMessage());
+        return ResponseEntity.status(404).body(exceptionResponseDto);
     }
-
-
-
-
-
 }
