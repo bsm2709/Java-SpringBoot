@@ -49,11 +49,6 @@ public class ProductController {
         }
         return ResponseEntity.status(200).body(productsLessThan);
     }
-    @GetMapping("/price-less-than/{price}")
-    public ResponseEntity<List<Product>> getCheapProducts(@PathVariable Double price) {
-        List<Product> products = productService.productLessThan(price);
-        return ResponseEntity.ok(products);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<CreateProductResponseDto> singleActiveProduct(@PathVariable Long id){
