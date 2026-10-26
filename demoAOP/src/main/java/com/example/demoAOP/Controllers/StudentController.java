@@ -20,7 +20,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Student> getStudent(){
+    public ResponseEntity<Student> getStudent() throws InterruptedException {
         return ResponseEntity.ok(studentService.fetchStudent());
     }
 }

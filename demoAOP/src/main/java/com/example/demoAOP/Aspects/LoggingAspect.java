@@ -1,6 +1,7 @@
 package com.example.demoAOP.Aspects;
 
 
+import com.example.demoAOP.CustomAnnotations.TrackExecutionTime;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -8,11 +9,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-
-import java.security.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Timer;
 
 @Component
 @Aspect
@@ -39,20 +35,45 @@ public class LoggingAspect {
 //        System.out.println(originalString);
 //    }
 
-    //Entering to db to check time taken by it to execute
-    @Around("PointCuts.wrapRepositories()")
-    public Object calculateTime(ProceedingJoinPoint pjp) throws Throwable {
-        //Before
+//    //Entering to db to check time taken by it to execute
+//    @Around("PointCuts.wrapRepositories()")
+//    public Object calculateTime(ProceedingJoinPoint pjp) throws Throwable {
+//        //Before
+//        long startTime = System.currentTimeMillis();
+//
+//       Object result = pjp.proceed();
+//
+//       //After
+//       long endTime = System.currentTimeMillis();
+//
+//        System.out.println("Total time take: "+ (endTime - startTime)+ " ms");
+//
+//       return result;
+//    }
+
+    //For custom Annotations
+    @Around("@annotation(trackExecutionTime)")
+    public Object trackExecutionTime(ProceedingJoinPoint pjp,
+                                     TrackExecutionTime trackExecutionTime) throws Throwable {
+
+//      Before
+        Object result;
         long startTime = System.currentTimeMillis();
 
-       Object result = pjp.proceed();
+        try {
+            System.out.println(trackExecutionTime.message());
+            result = pjp.proceed();
 
-       //After
-       long endTime = System.currentTimeMillis();
 
-        System.out.println("Total time take: "+ (endTime - startTime)+ " ms");
+        } finally {
+            long endTime = System.currentTimeMillis();
+            long totalTime = endTime - startTime;
+            System.out.println("Total time take: " + (totalTime) + " ms");
 
-       return result;
+            if(totalTime > trackExecutionTime.ExecutionTime()){
+                System.out.println("Alert: Slow Execution ");
+            }
+        }
+        return result;
     }
-
 }

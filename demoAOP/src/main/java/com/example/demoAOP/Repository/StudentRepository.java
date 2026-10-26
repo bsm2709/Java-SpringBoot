@@ -15,9 +15,15 @@ public class StudentRepository {
         return returnstudent;
     }
 
-    public Student getFromDB(){
+    public Student getFromDB() throws InterruptedException {
         hardCodedStudent.setStudentName("Santosh Meti");
         hardCodedStudent.setAge(25);
+         try{
+             Thread.sleep(2000);
+         }
+         catch (Exception ex){};
+
+
         return hardCodedStudent;
     }
 }

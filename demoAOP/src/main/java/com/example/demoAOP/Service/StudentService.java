@@ -1,5 +1,6 @@
 package com.example.demoAOP.Service;
 
+import com.example.demoAOP.CustomAnnotations.TrackExecutionTime;
 import com.example.demoAOP.Entity.Student;
 import com.example.demoAOP.Repository.StudentRepository;
 import jdk.jfr.Timespan;
@@ -19,8 +20,9 @@ public class StudentService {
         return studentRepository.addTODB(student);
     }
 
+    @TrackExecutionTime(ExecutionTime = 3000)
     @Timestamp
-    public Student fetchStudent(){
+    public Student fetchStudent() throws InterruptedException {
         return studentRepository.getFromDB();
     }
 }
