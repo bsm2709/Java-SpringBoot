@@ -50,7 +50,7 @@ public class UserController {
 
     }
 
-    @PatchMapping("/api/users/alterActive/{id}/{active}")
+    @PatchMapping("/alterActive/{id}/{active}")
     public void changeActiveness(@PathVariable long id,@PathVariable boolean active){
         userService.alterActiveness(id,active);
     }

@@ -17,7 +17,7 @@ public class AuthenticationInterceptors implements HandlerInterceptor {
         System.out.println("Interceptor called");
         String role = request.getHeader("x-role");
 
-        if(role == null || !role.equals("ADMIN")){
+        if (role == null || !role.equals("ADMIN")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("User Not Found");
             return false;
