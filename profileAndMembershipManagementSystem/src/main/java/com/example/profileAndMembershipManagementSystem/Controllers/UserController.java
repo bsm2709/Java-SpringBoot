@@ -1,12 +1,13 @@
 package com.example.profileAndMembershipManagementSystem.Controllers;
 
+import com.example.profileAndMembershipManagementSystem.Dtos.UserRequestDto;
+import com.example.profileAndMembershipManagementSystem.Dtos.UserResponseDto;
 import com.example.profileAndMembershipManagementSystem.Entity.User;
 import com.example.profileAndMembershipManagementSystem.Services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,8 +20,8 @@ public class UserController {
 
     //Add User
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        return ResponseEntity.ok(userService.addUserToRepo(user));
+    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto userRequestDto){
+        return ResponseEntity.ok(userService.addUserToRepo(userRequestDto));
     }
 
     //Get all Active users
@@ -31,15 +32,22 @@ public class UserController {
 
     //Get perticular User by id
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> getActiveUser(@PathVariable long id){
+    public ResponseEntity<UserResponseDto> getActiveUser(@PathVariable long id){
         return ResponseEntity.ok(userService.fetchActiveUser(id));
     }
 
     //Edit user details
-    @PostMapping("/{id}")
-    public ResponseEntity<User> editActiveUser(@RequestBody User user,
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> editActiveUser(@RequestBody UserRequestDto userRequestDto,
                                                @PathVariable long id){
-        return ResponseEntity.ok(userService.editActiveUser(user,id));
+        return ResponseEntity.ok(userService.editActiveUser(userRequestDto,id));
+    }
+
+    //Soft-Delete
+    @PatchMapping("/{id}")
+    public void softDeleteUser(@PathVariable long id){
+        userService.softDelete(id);
+
     }
 
     //Delete User
