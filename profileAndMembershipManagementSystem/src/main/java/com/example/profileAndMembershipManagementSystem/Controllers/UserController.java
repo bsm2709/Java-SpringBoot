@@ -50,6 +50,11 @@ public class UserController {
 
     }
 
+    @PatchMapping("/api/users/alterActive/{id}/{active}")
+    public void changeActiveness(@PathVariable long id,@PathVariable boolean active){
+        userService.alterActiveness(id,active);
+    }
+
     //Delete User
     @DeleteMapping("/{id}")
     public void deleteActiveUser(@PathVariable long id){

@@ -1,5 +1,6 @@
 package com.example.profileAndMembershipManagementSystem.Services;
 
+import com.example.profileAndMembershipManagementSystem.CustomAnnotations.AuditableUser;
 import com.example.profileAndMembershipManagementSystem.Dtos.UserRequestDto;
 import com.example.profileAndMembershipManagementSystem.Dtos.UserResponseDto;
 import com.example.profileAndMembershipManagementSystem.Entity.User;
@@ -19,6 +20,7 @@ public class UserService {
     }
 
     //To add User to database
+    @AuditableUser
     public UserResponseDto addUserToRepo(UserRequestDto userRequestDto){
         User user = convertRequestDtoToUser(userRequestDto);
         userRepository.save(user);
@@ -27,11 +29,13 @@ public class UserService {
     }
 
     //Get all active students
+    @AuditableUser
     public List<User> fetchAllActiveUsers(){
         return userRepository.findAll();
     }
 
     //Get particular Active student by id
+    @AuditableUser
     public UserResponseDto fetchActiveUser(long id){
         User user = userRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new UserNotFoundException("User Not found"));
         return convertUserToResponseDto(user);
@@ -39,6 +43,7 @@ public class UserService {
 
 
     //Edit particular Active student by id
+    @AuditableUser
     public UserResponseDto editActiveUser(UserRequestDto userRequestDto,long id){
         User originalUser = userRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new UserNotFoundException("User Not found"));
 
@@ -53,13 +58,22 @@ public class UserService {
     }
 
     //Soft-Delete
+    @AuditableUser
     public void softDelete(long id){
         User user = userRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new UserNotFoundException("User Not found"));
         user.setDeleted(true);
         userRepository.save(user);
     }
 
+    public void alterActiveness(long id, boolean active){
+        User user = userRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new UserNotFoundException("User Not found"));
+        user.setActive(active);
+        userRepository.save(user);
+
+    }
+
     //Delete
+    @AuditableUser
     public void deleteUser(long id){
         userRepository.deleteById(id);
     }
