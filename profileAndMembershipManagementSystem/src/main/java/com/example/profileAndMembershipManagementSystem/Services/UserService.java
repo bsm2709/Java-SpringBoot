@@ -17,7 +17,7 @@ public class UserService {
 
     //To add User to database
     public User addUserToRepo(User user){
-
+        user.setActive(true);
         return userRepository.save(user);
     }
 
@@ -30,5 +30,22 @@ public class UserService {
     public Optional<User> fetchActiveUser(long id){
         return userRepository.findById(id);
     }
-    
+
+    //Edit particular Active student by id
+    public User editActiveUser(User user,long id){
+        User originalUser = userRepository.getReferenceById(id);
+
+        //Edit or alter details
+        originalUser.setEmail(user.getEmail());
+        originalUser.setMembershipTier(user.getMembershipTier());
+
+        userRepository.save(originalUser);
+
+        return originalUser;
+    }
+
+    //Soft-Delete
+    public void deleteUser(long id){
+        userRepository.deleteById(id);
+    }
 }

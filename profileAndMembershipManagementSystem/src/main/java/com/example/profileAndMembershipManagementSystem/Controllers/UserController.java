@@ -34,4 +34,17 @@ public class UserController {
     public ResponseEntity<Optional<User>> getActiveUser(@PathVariable long id){
         return ResponseEntity.ok(userService.fetchActiveUser(id));
     }
+
+    //Edit user details
+    @PostMapping("/{id}")
+    public ResponseEntity<User> editActiveUser(@RequestBody User user,
+                                               @PathVariable long id){
+        return ResponseEntity.ok(userService.editActiveUser(user,id));
+    }
+
+    //Delete User
+    @DeleteMapping("/{id}")
+    public void deleteActiveUser(@PathVariable long id){
+        userService.deleteUser(id);
+    }
 }
