@@ -24,7 +24,7 @@ public class CourseController {
         return ResponseEntity.status(201).body(courseService.getAllCourseByDb());
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id){
         return ResponseEntity.ok(courseService.getCourseByDb(id));
     }
@@ -34,7 +34,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.addCourseToDb(course));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id,
                                                @RequestBody Course course ){
         return ResponseEntity.ok(courseService.updateCourseToDb(id, course));

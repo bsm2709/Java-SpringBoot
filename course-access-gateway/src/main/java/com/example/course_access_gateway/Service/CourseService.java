@@ -1,6 +1,7 @@
 package com.example.course_access_gateway.Service;
 
 import com.example.course_access_gateway.Entity.Course;
+import com.example.course_access_gateway.Exceptions.ElementNotFound;
 import com.example.course_access_gateway.Repository.CourseRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class CourseService {
 
     //Get by ID
     public Course getCourseByDb(Long id){
-        Course course = courseRepo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        Course course = courseRepo.findById(id).orElseThrow(() -> new ElementNotFound("Not found"));
 
         return course;
     }
@@ -37,7 +38,7 @@ public class CourseService {
     //Update
     @Transactional
     public Course updateCourseToDb(Long id, Course course){
-       Course originalCourse = courseRepo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+       Course originalCourse = courseRepo.findById(id).orElseThrow(() -> new ElementNotFound("Not found"));
 
        originalCourse.setDescription(course.getDescription());
        originalCourse.setTitle(course.getTitle());
@@ -50,7 +51,7 @@ public class CourseService {
     //Delete
     @Transactional
     public void deleteCourse(Long id){
-        Course toDelete = courseRepo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        Course toDelete = courseRepo.findById(id).orElseThrow(() -> new ElementNotFound("Not found"));
         courseRepo.delete(toDelete);
     }
 }
