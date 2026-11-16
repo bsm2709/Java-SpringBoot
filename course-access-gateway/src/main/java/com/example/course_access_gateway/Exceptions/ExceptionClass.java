@@ -27,10 +27,15 @@ public class ExceptionClass {
     }
 
     @ExceptionHandler(ElementNotFound.class)
-    public ResponseEntity<ExceptionDto> runTimeException(ElementNotFound elementNotFound){
+    public ResponseEntity<ExceptionDto> elementNotFound(ElementNotFound elementNotFound){
         ExceptionDto exceptionDto = new ExceptionDto(LocalDateTime.now(), HttpStatusCode.valueOf(404), elementNotFound.getMessage());
         return ResponseEntity.status(404).body(exceptionDto);
     }
 
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ExceptionDto> unauthorizedAccessException(UnauthorizedAccessException unauthorizedAccessException){
+        ExceptionDto exceptionDto = new ExceptionDto(LocalDateTime.now(), HttpStatusCode.valueOf(401), unauthorizedAccessException.getMessage());
+        return ResponseEntity.status(401).body(exceptionDto);
+    }
 
 }

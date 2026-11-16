@@ -1,9 +1,9 @@
 package com.example.course_access_gateway.Controller;
 
 
+
 import com.example.course_access_gateway.Entity.Course;
 import com.example.course_access_gateway.Service.CourseService;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
